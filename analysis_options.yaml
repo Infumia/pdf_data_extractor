@@ -1,0 +1,23 @@
+include: package:flint/analysis_options.flutter.yaml
+
+analyzer:
+  language:
+    strict-raw-types: true
+    strict-casts: true
+    strict-inference: true
+
+formatter:
+  page_width: 80
+
+custom_lint:
+  rules:
+    prefer_const_empty_literals: true
+
+linter:
+  rules:
+    one_member_abstracts: false
+    public_member_api_docs: false
+    prefer_single_quotes: false
+    prefer_double_quotes: true
+    sort_pub_dependencies: false
+    diagnostic_describe_all_properties: true
