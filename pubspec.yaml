@@ -1,5 +1,5 @@
 name: pdf_data_extractor
-description: "{{PLACEHOLDER}}"
+description: "A comprehensive PDF parsing library for Dart/Flutter. Extract text, tables, and detailed object information from PDFs. Inspired by Python's pdfplumber."
 version: 0.0.1
 repository: https://github.com/infumia/pdf_data_extractor/
 
@@ -8,6 +8,10 @@ environment:
 
 dependencies:
   args: ^2.7.0
+  pdfrx: ^2.2.16
+  collection: ^1.18.0
+  path: ^1.9.0
+  csv: ^6.0.0
 
 dev_dependencies:
   test: ^1.25.6
