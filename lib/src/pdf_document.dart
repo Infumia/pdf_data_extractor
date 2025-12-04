@@ -8,7 +8,7 @@ import "package:pdfrx/pdfrx.dart" as pdfrx;
 /// Represents a PDF document with parsing capabilities
 class PdfPlumberDocument {
   final pdfrx.PdfDocument _pdfDocument;
-  final List<PdfPlumberPage> _pages = [];
+  final List<PdfPlumberPage?> _pages = [];
   final Map<String, dynamic>? _metadata;
 
   PdfPlumberDocument._(this._pdfDocument, this._metadata);
@@ -73,7 +73,7 @@ class PdfPlumberDocument {
     if (_pages.isEmpty) {
       await _loadAllPages();
     }
-    return _pages;
+    return _pages.whereType<PdfPlumberPage>().toList();
   }
 
   /// Get a specific page by index (0-indexed)
@@ -83,11 +83,11 @@ class PdfPlumberDocument {
     }
 
     // Load page if not already loaded
-    if (_pages.length <= index) {
+    if (_pages.length <= index || _pages[index] == null) {
       await _loadPage(index);
     }
 
-    return _pages[index];
+    return _pages[index]!;
   }
 
   /// Load all pages
@@ -99,9 +99,8 @@ class PdfPlumberDocument {
 
   /// Load a specific page
   Future<void> _loadPage(int index) async {
-    final pdfPage = await _pdfDocument.getPage(
-      index + 1,
-    ); // pdfrx uses 1-indexed pages
+    // pdfrx pages list is 0-indexed
+    final pdfPage = _pdfDocument.pages[index];
 
     // Parse the page to extract objects
     final parser = PdfParser(pdfPage);
@@ -121,7 +120,7 @@ class PdfPlumberDocument {
 
     // Ensure the list is large enough
     while (_pages.length <= index) {
-      _pages.add(null as PdfPlumberPage);
+      _pages.add(null);
     }
     _pages[index] = page;
   }
