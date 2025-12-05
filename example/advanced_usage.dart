@@ -8,9 +8,8 @@ Future<void> main() async {
   print("=== Example 1: Custom Table Settings ===");
   final page = await doc.getPage(0);
 
-  final customSettings = TableSettings(
+  const customSettings = TableSettings(
     verticalStrategy: TableStrategy.text,
-    horizontalStrategy: TableStrategy.lines,
     minWordsVertical: 5,
     textTolerance: 5,
   );
@@ -55,7 +54,7 @@ Future<void> main() async {
 
   // Example 6: Extract objects within a bounding box
   print("=== Example 6: Objects Within BBox ===");
-  final bbox = BoundingBox(x0: 0, top: 0, x1: 300, bottom: 300);
+  const bbox = BoundingBox(x0: 0, top: 0, x1: 300, bottom: 300);
   final filtered = page.withinBbox(bbox);
   print("Objects in top-left quadrant:");
   print("  Chars: ${filtered.chars.length}");
@@ -65,7 +64,7 @@ Future<void> main() async {
 
   // Example 7: Relative bounding box
   print("=== Example 7: Relative Coordinates ===");
-  final relativeBbox = BoundingBox(x0: 0.25, top: 0.25, x1: 0.75, bottom: 0.75);
+  const relativeBbox = BoundingBox(x0: 0.25, top: 0.25, x1: 0.75, bottom: 0.75);
   final centerQuadrant = page.crop(relativeBbox, relative: true);
   print("Center quadrant chars: ${centerQuadrant.chars.length}");
   print("");

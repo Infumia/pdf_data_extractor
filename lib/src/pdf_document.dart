@@ -19,7 +19,7 @@ class PdfPlumberDocument {
     String? password,
   }) async {
     final file = File(path);
-    if (!await file.exists()) {
+    if (!file.existsSync()) {
       throw Exception("PDF file not found: $path");
     }
 

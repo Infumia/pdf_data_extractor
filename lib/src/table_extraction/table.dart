@@ -12,7 +12,9 @@ class Table {
 
   /// Get all rows in the table
   List<List<TableCell>> get rows {
-    if (cells.isEmpty) return [];
+    if (cells.isEmpty) {
+      return [];
+    }
 
     // Group cells by row (similar y-coordinates)
     final Map<double, List<TableCell>> rowMap = {};
@@ -33,7 +35,9 @@ class Table {
 
   /// Get all columns in the table
   List<List<TableCell>> get columns {
-    if (cells.isEmpty) return [];
+    if (cells.isEmpty) {
+      return [];
+    }
 
     // Group cells by column (similar x-coordinates)
     final Map<double, List<TableCell>> colMap = {};

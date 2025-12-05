@@ -125,7 +125,7 @@ Future<void> main(List<String> arguments) async {
     print("");
     printUsage(argParser);
     exit(1);
-  } catch (e) {
+  } on Exception catch (e) {
     print("Error: $e");
     exit(1);
   }
@@ -148,8 +148,9 @@ Future<void> extractText(String pdfPath, ArgResults args) async {
       yTolerance: yTolerance,
       layout: layout,
     );
-    buffer.writeln(text);
-    buffer.writeln("---");
+    buffer
+      ..writeln(text)
+      ..writeln("---");
   }
 
   final output = buffer.toString();
@@ -296,7 +297,7 @@ Future<List<PdfPlumberPage>> _getPages(
   String? pagesArg,
 ) async {
   if (pagesArg == null) {
-    return await doc.pages;
+    return doc.pages;
   }
 
   final pageIndices = <int>[];

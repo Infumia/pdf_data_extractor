@@ -12,13 +12,17 @@ class TextExtraction {
     double xDensity = 7.25,
     double yDensity = 13,
   }) {
-    if (chars.isEmpty) return "";
+    if (chars.isEmpty) {
+      return "";
+    }
 
     // Sort characters by position (top to bottom, left to right)
     final sortedChars = List<PdfChar>.from(chars)
       ..sort((a, b) {
         final topDiff = a.top.compareTo(b.top);
-        if (topDiff.abs() > yTolerance) return topDiff;
+        if (topDiff.abs() > yTolerance) {
+          return topDiff;
+        }
         return a.x0.compareTo(b.x0);
       });
 
@@ -57,7 +61,9 @@ class TextExtraction {
     double yTolerance = 3,
     bool keepBlankChars = false,
   }) {
-    if (chars.isEmpty) return [];
+    if (chars.isEmpty) {
+      return [];
+    }
 
     final words = <Map<String, dynamic>>[];
     final currentWord = <PdfChar>[];
@@ -66,14 +72,18 @@ class TextExtraction {
     final sortedChars = List<PdfChar>.from(chars)
       ..sort((a, b) {
         final topDiff = a.top.compareTo(b.top);
-        if (topDiff.abs() > yTolerance) return topDiff;
+        if (topDiff.abs() > yTolerance) {
+          return topDiff;
+        }
         return a.x0.compareTo(b.x0);
       });
 
     PdfChar? prevChar;
 
     for (final char in sortedChars) {
-      if (!keepBlankChars && char.text.trim().isEmpty) continue;
+      if (!keepBlankChars && char.text.trim().isEmpty) {
+        continue;
+      }
 
       bool shouldBreak = false;
 
@@ -157,7 +167,9 @@ class TextExtraction {
     double tolerance = 1,
     List<String> extraAttrs = const ["fontname", "size"],
   }) {
-    if (chars.isEmpty) return [];
+    if (chars.isEmpty) {
+      return [];
+    }
 
     final deduped = <PdfChar>[];
     final seen = <String>{};

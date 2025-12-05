@@ -45,7 +45,7 @@ Future<void> main() async {
 
   // Example 5: Crop a page
   print("=== Example 5: Crop Page ===");
-  final bbox = BoundingBox(x0: 100, top: 100, x1: 400, bottom: 400);
+  const bbox = BoundingBox(x0: 100, top: 100, x1: 400, bottom: 400);
   final croppedPage = firstPage.crop(bbox);
   print("Original page chars: ${firstPage.chars.length}");
   print("Cropped page chars: ${croppedPage.chars.length}");

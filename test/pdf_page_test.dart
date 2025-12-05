@@ -1,5 +1,5 @@
-import "package:test/test.dart";
 import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:test/test.dart";
 
 void main() {
   group("PdfPlumberPage", () {
@@ -36,20 +36,20 @@ void main() {
     });
 
     test("should crop page", () {
-      final bbox = BoundingBox(x0: 0, top: 0, x1: 100, bottom: 100);
+      const bbox = BoundingBox(x0: 0, top: 0, x1: 100, bottom: 100);
       final cropped = page.crop(bbox);
       expect(cropped.width, equals(100));
       expect(cropped.height, equals(100));
     });
 
     test("should filter objects within bbox", () {
-      final bbox = BoundingBox(x0: 0, top: 0, x1: 100, bottom: 100);
+      const bbox = BoundingBox(x0: 0, top: 0, x1: 100, bottom: 100);
       final filtered = page.withinBbox(bbox);
       expect(filtered.chars.length, lessThanOrEqualTo(page.chars.length));
     });
 
     test("should filter objects outside bbox", () {
-      final bbox = BoundingBox(x0: 0, top: 0, x1: 50, bottom: 50);
+      const bbox = BoundingBox(x0: 0, top: 0, x1: 50, bottom: 50);
       final filtered = page.outsideBbox(bbox);
       expect(filtered.chars.length, lessThanOrEqualTo(page.chars.length));
     });

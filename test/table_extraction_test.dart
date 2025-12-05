@@ -1,5 +1,5 @@
-import "package:test/test.dart";
 import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:test/test.dart";
 
 void main() {
   group("Table Extraction", () {
@@ -38,7 +38,7 @@ void main() {
     });
 
     test("should use custom table settings", () {
-      final settings = TableSettings(
+      const settings = TableSettings(
         verticalStrategy: TableStrategy.text,
         horizontalStrategy: TableStrategy.text,
         minWordsVertical: 2,

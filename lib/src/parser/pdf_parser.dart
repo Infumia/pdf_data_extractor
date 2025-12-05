@@ -1,6 +1,5 @@
-import "package:pdfrx/pdfrx.dart" as pdfrx;
-
 import "package:pdf_data_extractor/src/models/pdf_object.dart";
+import "package:pdfrx/pdfrx.dart" as pdfrx;
 
 /// Data extracted from a PDF page
 class PageData {
@@ -53,7 +52,9 @@ class PdfParser {
     try {
       // Get text from the page
       final text = await _page.loadText();
-      if (text == null) return chars;
+      if (text == null) {
+        return chars;
+      }
 
       // pdfrx provides text as PdfPageRawText
       // We need to estimate character positions
@@ -87,7 +88,9 @@ class PdfParser {
         }
 
         // Skip if we're beyond page bounds
-        if (currentY > pageHeight) break;
+        if (currentY > pageHeight) {
+          break;
+        }
 
         final x0 = currentX;
         final x1 = currentX + estimatedCharWidth;
@@ -154,7 +157,7 @@ class PdfParser {
       // pdfrx doesn't directly expose image positions
       // This would require parsing the PDF content stream
       // For now, return empty list
-    } catch (e) {
+    } on Exception catch (e) {
       print("Error extracting images: $e");
     }
 
@@ -169,7 +172,7 @@ class PdfParser {
       // pdfrx doesn't directly expose annotations
       // This would require accessing the PDF annotation dictionary
       // For now, return empty list
-    } catch (e) {
+    } on Exception catch (e) {
       print("Error extracting annotations: $e");
     }
 

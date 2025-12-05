@@ -1,5 +1,5 @@
-import "package:test/test.dart";
 import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:test/test.dart";
 
 void main() {
   group("Text Extraction", () {
@@ -51,7 +51,7 @@ void main() {
     });
 
     test("should search with regex", () {
-      final results = page.search(r"\d+", regex: true);
+      final results = page.search(r"\d+");
       if (results.isNotEmpty) {
         expect(results.first["text"], matches(RegExp(r"\d+")));
       }

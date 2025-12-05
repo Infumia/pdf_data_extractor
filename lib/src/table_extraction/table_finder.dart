@@ -15,7 +15,9 @@ class TableFinder {
     // Get edges based on strategy
     final edges = _getEdges();
 
-    if (edges.isEmpty) return [];
+    if (edges.isEmpty) {
+      return [];
+    }
 
     // Find intersections
     final intersections = _findIntersections(edges);
@@ -81,25 +83,26 @@ class TableFinder {
     // From rectangles (left and right edges)
     for (final rect in page.rects) {
       // Left edge
-      edges.add(
-        _Edge(
-          x0: rect.x0,
-          y0: rect.y0,
-          x1: rect.x0,
-          y1: rect.y1,
-          orientation: _EdgeOrientation.vertical,
-        ),
-      );
-      // Right edge
-      edges.add(
-        _Edge(
-          x0: rect.x1,
-          y0: rect.y0,
-          x1: rect.x1,
-          y1: rect.y1,
-          orientation: _EdgeOrientation.vertical,
-        ),
-      );
+      edges
+        ..add(
+          _Edge(
+            x0: rect.x0,
+            y0: rect.y0,
+            x1: rect.x0,
+            y1: rect.y1,
+            orientation: _EdgeOrientation.vertical,
+          ),
+        )
+        // Right edge
+        ..add(
+          _Edge(
+            x0: rect.x1,
+            y0: rect.y0,
+            x1: rect.x1,
+            y1: rect.y1,
+            orientation: _EdgeOrientation.vertical,
+          ),
+        );
     }
 
     return edges;
@@ -128,25 +131,26 @@ class TableFinder {
     // From rectangles (top and bottom edges)
     for (final rect in page.rects) {
       // Top edge
-      edges.add(
-        _Edge(
-          x0: rect.x0,
-          y0: rect.y0,
-          x1: rect.x1,
-          y1: rect.y0,
-          orientation: _EdgeOrientation.horizontal,
-        ),
-      );
-      // Bottom edge
-      edges.add(
-        _Edge(
-          x0: rect.x0,
-          y0: rect.y1,
-          x1: rect.x1,
-          y1: rect.y1,
-          orientation: _EdgeOrientation.horizontal,
-        ),
-      );
+      edges
+        ..add(
+          _Edge(
+            x0: rect.x0,
+            y0: rect.y0,
+            x1: rect.x1,
+            y1: rect.y0,
+            orientation: _EdgeOrientation.horizontal,
+          ),
+        )
+        // Bottom edge
+        ..add(
+          _Edge(
+            x0: rect.x0,
+            y0: rect.y1,
+            x1: rect.x1,
+            y1: rect.y1,
+            orientation: _EdgeOrientation.horizontal,
+          ),
+        );
     }
 
     return edges;
@@ -260,7 +264,9 @@ class TableFinder {
 
   /// Merge overlapping or nearby edges
   List<_Edge> _mergeEdges(List<_Edge> edges) {
-    if (edges.isEmpty) return edges;
+    if (edges.isEmpty) {
+      return edges;
+    }
 
     final merged = <_Edge>[];
     final sorted = List<_Edge>.from(edges)
@@ -359,7 +365,9 @@ class TableFinder {
 
   /// Group cells into tables
   List<Table> _groupCellsIntoTables(List<TableCell> cells) {
-    if (cells.isEmpty) return [];
+    if (cells.isEmpty) {
+      return [];
+    }
 
     // Simple implementation: treat all cells as one table
     final bbox = cells.fold<BoundingBox?>(
@@ -367,7 +375,9 @@ class TableFinder {
       (prev, cell) => prev == null ? cell.bbox : prev.union(cell.bbox),
     );
 
-    if (bbox == null) return [];
+    if (bbox == null) {
+      return [];
+    }
 
     return [Table(cells: cells, bbox: bbox)];
   }

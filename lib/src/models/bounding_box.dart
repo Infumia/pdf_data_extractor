@@ -45,7 +45,9 @@ class BoundingBox {
 
   /// Returns the intersection of this bounding box with another
   BoundingBox? intersection(BoundingBox other) {
-    if (!intersects(other)) return null;
+    if (!intersects(other)) {
+      return null;
+    }
 
     return BoundingBox(
       x0: x0 > other.x0 ? x0 : other.x0,
