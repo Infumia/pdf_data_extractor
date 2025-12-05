@@ -71,7 +71,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='PDF-Extractor-CLI',
+    name='pdf_extractor',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,  # Disabled to prevent DLL loading issues
