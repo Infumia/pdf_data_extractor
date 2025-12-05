@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   args: ^2.7.0
-  pdfrx: ^2.2.16
+  pdfrx_engine: ^0.3.5
   collection: ^1.18.0
   path: ^1.9.0
   csv: ^6.0.0

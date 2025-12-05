@@ -3,7 +3,7 @@ import "dart:typed_data";
 
 import "package:pdf_data_extractor/src/parser/pdf_parser.dart";
 import "package:pdf_data_extractor/src/pdf_page.dart";
-import "package:pdfrx/pdfrx.dart" as pdfrx;
+import "package:pdfrx_engine/pdfrx_engine.dart" as pdfrx;
 
 /// Represents a PDF document with parsing capabilities
 class PdfPlumberDocument {

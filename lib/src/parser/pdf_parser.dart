@@ -1,5 +1,5 @@
-import "package:pdf_data_extractor/src/models/pdf_object.dart";
-import "package:pdfrx/pdfrx.dart" as pdfrx;
+import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:pdfrx_engine/pdfrx_engine.dart" as pdfrx;
 
 /// Data extracted from a PDF page
 class PageData {
