@@ -56,66 +56,32 @@ class PdfParser {
         return chars;
       }
 
-      // pdfrx provides text as PdfPageRawText
-      // We need to estimate character positions
-      // Note: This is a simplified implementation
-      // A full implementation would need to parse the PDF content stream
+      // pdfrx_engine provides text as PdfPageRawText
+      // charRects gives us the bounding boxes for each character
+      // We need to match them with the actual text
+      const double doctop = 0;
 
-      const double doctop =
-          0; // This would need to be calculated based on page position
+      final textString = text.fullText;
+      final charRects = text.charRects;
 
-      // For now, we'll create a simple character-by-character breakdown
-      // This won't have accurate positioning but will allow text extraction to work
-      final textString = text.toString(); // Convert PdfPageRawText to string
-      final pageWidth = _page.width;
-      final pageHeight = _page.height;
-
-      // Estimate character size (this is very approximate)
-      const double estimatedCharWidth = 8.0;
-      const double estimatedCharHeight = 12.0;
-
-      double currentX = 0;
-      double currentY = estimatedCharHeight;
-
-      for (int i = 0; i < textString.length; i++) {
-        final char = textString[i];
-
-        // Handle newlines
-        if (char == "\n") {
-          currentX = 0;
-          currentY += estimatedCharHeight;
-          continue;
-        }
-
-        // Skip if we're beyond page bounds
-        if (currentY > pageHeight) {
-          break;
-        }
-
-        final x0 = currentX;
-        final x1 = currentX + estimatedCharWidth;
+      // Match characters with their rectangles
+      for (int i = 0; i < charRects.length && i < textString.length; i++) {
+        final rect = charRects[i];
+        final character = textString[i];
 
         chars.add(
           PdfChar(
             pageNumber: _page.pageNumber,
-            x0: x0,
-            y0: currentY - estimatedCharHeight,
-            x1: x1,
-            y1: currentY,
-            doctop: doctop + currentY - estimatedCharHeight,
-            text: char,
-            fontname: "Unknown", // pdfrx doesn't expose font info easily
-            size: estimatedCharHeight,
+            x0: rect.left,
+            y0: rect.top,
+            x1: rect.right,
+            y1: rect.bottom,
+            doctop: doctop + rect.top,
+            text: character,
+            fontname: "Unknown", // pdfrx_engine doesn't expose font info
+            size: rect.bottom - rect.top,
           ),
         );
-
-        currentX += estimatedCharWidth;
-
-        // Wrap to next line if needed
-        if (currentX > pageWidth) {
-          currentX = 0;
-          currentY += estimatedCharHeight;
-        }
       }
     } on Exception catch (e) {
       // If text extraction fails, return empty list
