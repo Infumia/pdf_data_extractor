@@ -63,5 +63,46 @@ void main() {
       final filtered = page.filter((obj) => obj is PdfChar && obj.text.trim().isNotEmpty);
       expect(filtered.chars, isNotEmpty);
     });
+
+    test("should extract text from specific bounding box", () {
+      // Get the full page text first
+      final fullText = page.extractText();
+      
+      // Define a region covering the full page
+      final bbox = BoundingBox(x0: 0, top: 0, x1: page.width, bottom: page.height);
+      
+      // Crop page to that region
+      final cropped = page.crop(bbox);
+      
+      // Extract text from the cropped region
+      final croppedText = cropped.extractText();
+      
+      // Cropped full page should have same text as original
+      expect(croppedText.replaceAll("\n", ""), equals(fullText.replaceAll("\n", "")));
+      
+      // The cropped page should have same or fewer characters
+      expect(cropped.chars.length, lessThanOrEqualTo(page.chars.length));
+    });
+
+    test("should extract text from specific coordinates using withinBbox", () {
+      // Define a specific region (full page for this test)
+      final bbox = BoundingBox(x0: 0, top: 0, x1: page.width, bottom: page.height);
+      
+      // Get only text within that bounding box
+      final filtered = page.withinBbox(bbox);
+      final text = filtered.extractText();
+      
+      // Should be able to extract text
+      expect(text, isA<String>());
+      expect(text, isNotEmpty);
+      
+      // All characters should be within the bounding box
+      for (final char in filtered.chars) {
+        expect(char.x0, greaterThanOrEqualTo(bbox.x0 - 1)); // Small tolerance
+        expect(char.x1, lessThanOrEqualTo(bbox.x1 + 1));
+        expect(char.top, greaterThanOrEqualTo(bbox.top - 1));
+        expect(char.bottom, lessThanOrEqualTo(bbox.bottom + 1));
+      }
+    });
   });
 }

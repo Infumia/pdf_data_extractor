@@ -58,8 +58,6 @@ Future<void> main() async {
   final filtered = page.withinBbox(bbox);
   print("Objects in top-left quadrant:");
   print("  Chars: ${filtered.chars.length}");
-  print("  Lines: ${filtered.lines.length}");
-  print("  Rects: ${filtered.rects.length}");
   print("");
 
   // Example 7: Relative bounding box

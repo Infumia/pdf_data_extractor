@@ -19,46 +19,15 @@ class PdfPlumberPage {
   /// All characters on the page
   final List<PdfChar> chars;
 
-  /// All lines on the page
-  final List<PdfLine> lines;
-
-  /// All rectangles on the page
-  final List<PdfRect> rects;
-
-  /// All curves on the page
-  final List<PdfCurve> curves;
-
-  /// All images on the page
-  final List<PdfImage> images;
-
-  /// All annotations on the page
-  final List<PdfAnnotation> annots;
-
   const PdfPlumberPage({
     required this.pageNumber,
     required this.width,
     required this.height,
     this.chars = const [],
-    this.lines = const [],
-    this.rects = const [],
-    this.curves = const [],
-    this.images = const [],
-    this.annots = const [],
   });
 
   /// Get all objects on the page
-  List<PdfObject> get objects => [
-    ...chars,
-    ...lines,
-    ...rects,
-    ...curves,
-    ...images,
-    ...annots,
-  ];
-
-  /// Get hyperlinks on the page
-  List<PdfHyperlink> get hyperlinks =>
-      annots.whereType<PdfHyperlink>().toList();
+  List<PdfObject> get objects => [...chars];
 
   /// Bounding box of the entire page
   BoundingBox get bbox => BoundingBox(x0: 0, top: 0, x1: width, bottom: height);
@@ -76,11 +45,6 @@ class PdfPlumberPage {
       width: cropBox.width,
       height: cropBox.height,
       chars: _filterObjects(chars, cropBox, strict),
-      lines: _filterObjects(lines, cropBox, strict),
-      rects: _filterObjects(rects, cropBox, strict),
-      curves: _filterObjects(curves, cropBox, strict),
-      images: _filterObjects(images, cropBox, strict),
-      annots: _filterObjects(annots, cropBox, strict),
     );
   }
 
@@ -104,11 +68,6 @@ class PdfPlumberPage {
       width: width,
       height: height,
       chars: _filterObjectsOutside(chars, filterBox, strict),
-      lines: _filterObjectsOutside(lines, filterBox, strict),
-      rects: _filterObjectsOutside(rects, filterBox, strict),
-      curves: _filterObjectsOutside(curves, filterBox, strict),
-      images: _filterObjectsOutside(images, filterBox, strict),
-      annots: _filterObjectsOutside(annots, filterBox, strict),
     );
   }
 
@@ -118,11 +77,6 @@ class PdfPlumberPage {
     width: width,
     height: height,
     chars: chars.where(test).cast<PdfChar>().toList(),
-    lines: lines.where(test).cast<PdfLine>().toList(),
-    rects: rects.where(test).cast<PdfRect>().toList(),
-    curves: curves.where(test).cast<PdfCurve>().toList(),
-    images: images.where(test).cast<PdfImage>().toList(),
-    annots: annots.where(test).cast<PdfAnnotation>().toList(),
   );
 
   // Text extraction methods

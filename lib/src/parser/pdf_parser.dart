@@ -4,19 +4,9 @@ import "package:pdfrx_engine/pdfrx_engine.dart" as pdfrx;
 /// Data extracted from a PDF page
 class PageData {
   final List<PdfChar> chars;
-  final List<PdfLine> lines;
-  final List<PdfRect> rects;
-  final List<PdfCurve> curves;
-  final List<PdfImage> images;
-  final List<PdfAnnotation> annots;
 
   const PageData({
     this.chars = const [],
-    this.lines = const [],
-    this.rects = const [],
-    this.curves = const [],
-    this.images = const [],
-    this.annots = const [],
   });
 }
 
@@ -29,19 +19,9 @@ class PdfParser {
   /// Parse the page and extract all objects
   Future<PageData> parse() async {
     final chars = await _extractChars();
-    final lines = await _extractLines();
-    final rects = await _extractRects();
-    final curves = await _extractCurves();
-    final images = await _extractImages();
-    final annots = await _extractAnnotations();
 
     return PageData(
       chars: chars,
-      lines: lines,
-      rects: rects,
-      curves: curves,
-      images: images,
-      annots: annots,
     );
   }
 
@@ -89,59 +69,5 @@ class PdfParser {
     }
 
     return chars;
-  }
-
-  /// Extract lines from the page
-  Future<List<PdfLine>> _extractLines() async {
-    // pdfrx doesn't expose vector graphics directly
-    // This would require parsing the PDF content stream
-    // For now, return empty list
-    return [];
-  }
-
-  /// Extract rectangles from the page
-  Future<List<PdfRect>> _extractRects() async {
-    // pdfrx doesn't expose vector graphics directly
-    // This would require parsing the PDF content stream
-    // For now, return empty list
-    return [];
-  }
-
-  /// Extract curves from the page
-  Future<List<PdfCurve>> _extractCurves() async {
-    // pdfrx doesn't expose vector graphics directly
-    // This would require parsing the PDF content stream
-    // For now, return empty list
-    return [];
-  }
-
-  /// Extract images from the page
-  Future<List<PdfImage>> _extractImages() async {
-    final images = <PdfImage>[];
-
-    try {
-      // pdfrx doesn't directly expose image positions
-      // This would require parsing the PDF content stream
-      // For now, return empty list
-    } on Exception catch (e) {
-      print("Error extracting images: $e");
-    }
-
-    return images;
-  }
-
-  /// Extract annotations from the page
-  Future<List<PdfAnnotation>> _extractAnnotations() async {
-    final annots = <PdfAnnotation>[];
-
-    try {
-      // pdfrx doesn't directly expose annotations
-      // This would require accessing the PDF annotation dictionary
-      // For now, return empty list
-    } on Exception catch (e) {
-      print("Error extracting annotations: $e");
-    }
-
-    return annots;
   }
 }

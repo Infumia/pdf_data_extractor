@@ -61,99 +61,15 @@ class TableFinder {
   }
 
   /// Get explicit vertical edges from lines and rectangles
+  /// Note: pdfrx_engine doesn't expose vector graphics, so this returns empty
   List<_Edge> _getExplicitVerticalEdges() {
-    final edges = <_Edge>[];
-
-    // From lines
-    for (final line in page.lines) {
-      if ((line.x1 - line.x0).abs() < settings.edgeMinLength &&
-          (line.y1 - line.y0).abs() >= settings.edgeMinLength) {
-        edges.add(
-          _Edge(
-            x0: line.x0,
-            y0: line.y0,
-            x1: line.x1,
-            y1: line.y1,
-            orientation: _EdgeOrientation.vertical,
-          ),
-        );
-      }
-    }
-
-    // From rectangles (left and right edges)
-    for (final rect in page.rects) {
-      // Left edge
-      edges
-        ..add(
-          _Edge(
-            x0: rect.x0,
-            y0: rect.y0,
-            x1: rect.x0,
-            y1: rect.y1,
-            orientation: _EdgeOrientation.vertical,
-          ),
-        )
-        // Right edge
-        ..add(
-          _Edge(
-            x0: rect.x1,
-            y0: rect.y0,
-            x1: rect.x1,
-            y1: rect.y1,
-            orientation: _EdgeOrientation.vertical,
-          ),
-        );
-    }
-
-    return edges;
+    return [];
   }
 
   /// Get explicit horizontal edges from lines and rectangles
+  /// Note: pdfrx_engine doesn't expose vector graphics, so this returns empty
   List<_Edge> _getExplicitHorizontalEdges() {
-    final edges = <_Edge>[];
-
-    // From lines
-    for (final line in page.lines) {
-      if ((line.y1 - line.y0).abs() < settings.edgeMinLength &&
-          (line.x1 - line.x0).abs() >= settings.edgeMinLength) {
-        edges.add(
-          _Edge(
-            x0: line.x0,
-            y0: line.y0,
-            x1: line.x1,
-            y1: line.y1,
-            orientation: _EdgeOrientation.horizontal,
-          ),
-        );
-      }
-    }
-
-    // From rectangles (top and bottom edges)
-    for (final rect in page.rects) {
-      // Top edge
-      edges
-        ..add(
-          _Edge(
-            x0: rect.x0,
-            y0: rect.y0,
-            x1: rect.x1,
-            y1: rect.y0,
-            orientation: _EdgeOrientation.horizontal,
-          ),
-        )
-        // Bottom edge
-        ..add(
-          _Edge(
-            x0: rect.x0,
-            y0: rect.y1,
-            x1: rect.x1,
-            y1: rect.y1,
-            orientation: _EdgeOrientation.horizontal,
-          ),
-        );
-    }
-
-    return edges;
+    return [];
   }
 
   /// Get implicit vertical edges from text alignment

@@ -1,10 +1,15 @@
+import "dart:io";
+
 import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:pdfrx_engine/pdfrx_engine.dart";
 
 /// Basic usage examples for PDF Plumber
 Future<void> main() async {
+  await pdfrxInitialize(tmpPath: Directory.systemTemp.path);
+
   // Example 1: Open a PDF and extract text
   print("=== Example 1: Extract Text ===");
-  final doc = await PdfPlumberDocument.openFile("sample.pdf");
+  final doc = await PdfPlumberDocument.openFile("example/sample.pdf");
 
   final firstPage = await doc.getPage(0);
   final text = firstPage.extractText();
@@ -28,8 +33,8 @@ Future<void> main() async {
 
   // Example 3: Search for text
   print("=== Example 3: Search for Text ===");
-  final results = firstPage.search("invoice", caseSensitive: false);
-  print('Found ${results.length} matches for "invoice"');
+  final results = firstPage.search("sigorta", caseSensitive: false);
+  print('Found ${results.length} matches for "sigorta"');
   for (final result in results) {
     print('  - ${result['text']} at position ${result['start']}');
   }
@@ -38,9 +43,6 @@ Future<void> main() async {
   // Example 4: Get object counts
   print("=== Example 4: Object Counts ===");
   print("Characters: ${firstPage.chars.length}");
-  print("Lines: ${firstPage.lines.length}");
-  print("Rectangles: ${firstPage.rects.length}");
-  print("Images: ${firstPage.images.length}");
   print("");
 
   // Example 5: Crop a page

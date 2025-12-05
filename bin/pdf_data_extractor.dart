@@ -218,18 +218,6 @@ Future<void> extractObjects(String pdfPath, ArgResults args) async {
     if (types.contains("char")) {
       allObjects.addAll(page.chars.map((c) => c.toJson()));
     }
-    if (types.contains("line")) {
-      allObjects.addAll(page.lines.map((l) => l.toJson()));
-    }
-    if (types.contains("rect")) {
-      allObjects.addAll(page.rects.map((r) => r.toJson()));
-    }
-    if (types.contains("curve")) {
-      allObjects.addAll(page.curves.map((c) => c.toJson()));
-    }
-    if (types.contains("image")) {
-      allObjects.addAll(page.images.map((i) => i.toJson()));
-    }
   }
 
   String output;
@@ -284,9 +272,6 @@ Future<void> showInfo(String pdfPath) async {
     print("First Page:");
     print("  Size: ${page.width} x ${page.height}");
     print("  Characters: ${page.chars.length}");
-    print("  Lines: ${page.lines.length}");
-    print("  Rectangles: ${page.rects.length}");
-    print("  Images: ${page.images.length}");
   }
 
   doc.close();

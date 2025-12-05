@@ -111,11 +111,6 @@ class PdfPlumberDocument {
       width: pdfPage.width,
       height: pdfPage.height,
       chars: pageData.chars,
-      lines: pageData.lines,
-      rects: pageData.rects,
-      curves: pageData.curves,
-      images: pageData.images,
-      annots: pageData.annots,
     );
 
     // Ensure the list is large enough
