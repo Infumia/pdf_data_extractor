@@ -104,5 +104,32 @@ void main() {
         expect(char.bottom, lessThanOrEqualTo(bbox.bottom + 1));
       }
     });
+
+    test("should extract 'Dummy PDF file' from specific region", () {
+      // The test PDF contains "Dummy PDF file" at approximately x=58-172, y=766-770
+      // Define a bounding box that captures this text
+      const textRegion = BoundingBox(
+        x0: 50,     // Start before first character
+        top: 760,   // Start above text
+        x1: 180,    // End after last character
+        bottom: 775, // End below text
+      );
+      
+      // Extract text from that specific region
+      final cropped = page.crop(textRegion);
+      final text = cropped.extractText();
+      
+      // Remove newlines for comparison (text extraction may add newlines)
+      final cleanText = text.replaceAll("\n", "").replaceAll(" ", "");
+      
+      // Should contain "Dummy PDF file" (without spaces/newlines)
+      expect(cleanText, contains("Dummy"));
+      expect(cleanText, contains("PDF"));
+      expect(cleanText, contains("file"));
+      
+      // Verify we captured the right characters
+      expect(cropped.chars.length, greaterThan(0));
+      expect(cropped.chars.length, lessThanOrEqualTo(14)); // "Dummy PDF file" is 14 chars
+    });
   });
 }
