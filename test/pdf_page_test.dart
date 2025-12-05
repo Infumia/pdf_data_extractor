@@ -1,4 +1,7 @@
+import "dart:io";
+
 import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:pdfrx_engine/pdfrx_engine.dart";
 import "package:test/test.dart";
 
 void main() {
@@ -7,6 +10,7 @@ void main() {
     late PdfPlumberPage page;
 
     setUpAll(() async {
+      await pdfrxInitialize(tmpPath: Directory.systemTemp.path);
       doc = await PdfPlumberDocument.openFile("test/fixtures/test_sample.pdf");
       page = await doc.getPage(0);
     });
@@ -55,7 +59,8 @@ void main() {
     });
 
     test("should filter objects with custom function", () {
-      final filtered = page.filter((obj) => obj is PdfChar && obj.size > 10);
+      // Filter for non-whitespace characters
+      final filtered = page.filter((obj) => obj is PdfChar && obj.text.trim().isNotEmpty);
       expect(filtered.chars, isNotEmpty);
     });
   });

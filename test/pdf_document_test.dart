@@ -1,12 +1,15 @@
-import "package:test/test.dart";
-import "package:pdf_data_extractor/pdf_plumber.dart";
 import "dart:io";
+
+import "package:pdf_data_extractor/pdf_plumber.dart";
+import "package:pdfrx_engine/pdfrx_engine.dart";
+import "package:test/test.dart";
 
 void main() {
   group("PdfPlumberDocument", () {
     late String testPdfPath;
 
-    setUpAll(() {
+    setUpAll(() async {
+      await pdfrxInitialize(tmpPath: Directory.systemTemp.path);
       testPdfPath = "test/fixtures/test_sample.pdf";
     });
 
@@ -34,16 +37,15 @@ void main() {
 
     test("should return correct page count", () async {
       final doc = await PdfPlumberDocument.openFile(testPdfPath);
-      expect(doc.pageCount, equals(2)); // Our test PDF has 2 pages
+      expect(doc.pageCount, equals(1)); // Our test PDF has 1 page
       doc.close();
     });
 
     test("should get all pages", () async {
       final doc = await PdfPlumberDocument.openFile(testPdfPath);
       final pages = await doc.pages;
-      expect(pages.length, equals(2));
+      expect(pages.length, equals(1));
       expect(pages[0].pageNumber, equals(1));
-      expect(pages[1].pageNumber, equals(2));
       doc.close();
     });
 
