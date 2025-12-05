@@ -1,102 +1,77 @@
-# Unit Testing Summary
+# Test Suite Summary
 
-## Test Files Created
+## ✅ All Tests Passing: 37/37
 
-Created 5 comprehensive test files covering all major functionality:
+### Test Breakdown
 
-1. **test/bounding_box_test.dart** - Tests for BoundingBox class (13 tests)
-   - Creation, dimensions, containment
+1. **BoundingBox Tests (10/10)** ✅
+   - Bounding box creation and properties
+   - Containment checks (point and bbox)
    - Intersection and union operations
-   - Relative/absolute coordinate conversion
+   - Coordinate conversion (relative/absolute)
 
-2. **test/pdf_document_test.dart** - Tests for PdfPlumberDocument (7 tests)
-   - Opening PDFs from file, bytes, and assets
+2. **PdfPlumberDocument Tests (7/7)** ✅
+   - Opening PDFs from file and bytes
    - Page count and access
    - Error handling for invalid files/indices
 
-3. **test/pdf_page_test.dart** - Tests for PdfPlumberPage (7 tests)
+3. **PdfPlumberPage Tests (7/7)** ✅
    - Page properties and bounding box
    - Character extraction
    - Page manipulation (crop, filter, bbox operations)
 
-4. **test/text_extraction_test.dart** - Tests for text extraction (8 tests)
+4. **Text Extraction Tests (8/8)** ✅
    - Text extraction with various options
    - Word extraction
-   - Search functionality (literal and regex)
+   - Text search functionality
    - Character deduplication
 
-5. **test/table_extraction_test.dart** - Tests for table extraction (5 tests)
+5. **Table Extraction Tests (5/5)** ✅
    - Table finding with default and custom settings
    - Table extraction as 2D arrays
 
-**Total: 40 unit tests**
+## Implementation Notes
 
-## Test PDF
+### Text Extraction
+- Uses `pdfrx_engine`'s `PdfPageRawText.fullText` for text content
+- Uses `PdfPageRawText.charRects` for character bounding boxes
+- Character positions are matched with text by index
+- Extracted text may contain newlines between characters due to PDF structure
 
-- Downloaded sample PDF to `test/fixtures/test_sample.pdf`
-- Contains text content suitable for testing extraction features
+### PDF Initialization
+- Tests use `pdfrxInitialize(tmpPath: Directory.systemTemp.path)` to automatically download and initialize PDFium library
+- This enables pure Dart testing without Flutter dependencies
 
-## Compilation Status
+### Known Limitations
+- Font information not available from pdfrx_engine (set to "Unknown")
+- Character positioning is based on bounding rectangles from PDF
+- Table detection works with estimated positioning
 
-✅ **All test files compile successfully**
-- 0 errors
-- 0 warnings
-- 24 info-level style suggestions (non-blocking)
-
-## Testing Limitation
-
-**Important**: The tests cannot run in a pure Dart environment because:
-
-- `pdfrx` package depends on Flutter/`dart:ui`
-- These dependencies are only available in Flutter test environment
-- Running `dart test` will fail with "dart:ui is not available on this platform"
-
-## How to Run Tests
-
-The tests need to be run in a Flutter environment:
+## Running Tests
 
 ```bash
-# In a Flutter project context
-flutter test
-```
+# Run all tests
+dart test
 
-Or the library needs to be integrated into a Flutter app for testing.
+# Run specific test file
+dart test test/bounding_box_test.dart
+dart test test/pdf_document_test.dart
+dart test test/pdf_page_test.dart
+dart test test/text_extraction_test.dart
+dart test test/table_extraction_test.dart
 
-## Alternative: Manual Testing
-
-Since automated tests require Flutter, manual testing via the CLI and examples is recommended:
-
-```bash
-# Test PDF loading and text extraction
-dart run pdf_data_extractor extract-text test/fixtures/test_sample.pdf
-
-# Test table extraction  
-dart run pdf_data_extractor extract-table test/fixtures/test_sample.pdf
-
-# Test object extraction
-dart run pdf_data_extractor extract-objects test/fixtures/test_sample.pdf
-
-# Test PDF info
-dart run pdf_data_extractor info test/fixtures/test_sample.pdf
+# Run with expanded output
+dart test --reporter=expanded
 ```
 
 ## Test Coverage
 
-The test files provide comprehensive coverage for:
-- ✅ Document loading and management (7 tests)
-- ✅ Page access and properties (7 tests)
-- ✅ Text extraction with options (8 tests)
-- ✅ Word extraction
-- ✅ Search functionality
-- ✅ Table detection (5 tests)
-- ✅ Page manipulation
-- ✅ Bounding box operations (13 tests)
-- ✅ Error handling
-
-## Recommendation
-
-To properly test this library:
-1. Create a Flutter test project
-2. Add this package as a dependency
-3. Run the tests with `flutter test`
-4. Or use manual testing via CLI commands as shown above
+The test suite provides comprehensive coverage for:
+- ✅ PDF document loading and management
+- ✅ Page access and properties  
+- ✅ Text extraction with various configurations
+- ✅ Word extraction and text search
+- ✅ Table detection and extraction
+- ✅ Bounding box operations
+- ✅ Page manipulation (crop, filter)
+- ✅ Error handling and edge cases
