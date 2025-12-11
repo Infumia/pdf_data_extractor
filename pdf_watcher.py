@@ -180,7 +180,7 @@ class PDFMetadataExtractor:
         
         return None
     
-    def extract_metadata(self, pdf_path: str) -> MetaEntry:
+    def extract_metadata(self, pdf_path: str) -> Optional[MetaEntry]:
         """
         Extract all metadata from a PDF file.
         
@@ -188,18 +188,22 @@ class PDFMetadataExtractor:
             pdf_path: Path to the PDF file
             
         Returns:
-            MetaEntry with extracted metadata
+            MetaEntry with extracted metadata, or None if company/insurance type unknown
         """
         name = Path(pdf_path).stem
         file_hash = self.compute_file_hash(pdf_path)
         company = self.detect_company(pdf_path)
         insurance_type = self.detect_insurance_type(pdf_path, company)
         
+        # Skip if company or insurance type is unknown
+        if not company or not insurance_type:
+            return None
+        
         return MetaEntry(
             name=name,
             hash=file_hash,
-            company=company or "unknown",
-            insurance_type=insurance_type or "unknown"
+            company=company,
+            insurance_type=insurance_type
         )
 
 
@@ -339,6 +343,11 @@ class PDFEventHandler(FileSystemEventHandler):
         try:
             print(f"\n📄 Processing: {Path(path).name}")
             entry = self.extractor.extract_metadata(path)
+            
+            if entry is None:
+                print(f"  ⚠️ Skipped: Unknown company or insurance type")
+                return
+            
             print(f"  Company: {entry.company}")
             print(f"  Insurance Type: {entry.insurance_type}")
             self.meta_manager.add_or_update(entry)
@@ -396,6 +405,11 @@ def process_existing_pdfs(watch_directory: str, extractor: PDFMetadataExtractor,
             try:
                 print(f"\n📄 Processing: {pdf_file.name}")
                 entry = extractor.extract_metadata(str(pdf_file))
+                
+                if entry is None:
+                    print(f"  ⚠️ Skipped: Unknown company or insurance type")
+                    continue
+                
                 print(f"  Company: {entry.company}")
                 print(f"  Insurance Type: {entry.insurance_type}")
                 meta_manager.add_or_update(entry)
