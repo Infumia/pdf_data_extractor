@@ -33,14 +33,16 @@ class MetaEntry:
 class PDFMetadataExtractor:
     """Handles PDF metadata extraction using pdfplumber."""
     
-    def __init__(self, companies_config: list):
+    def __init__(self, companies_config: list, x_tolerance: int = 1):
         """
         Initialize the extractor with company configuration.
         
         Args:
             companies_config: List of company configurations from companies.json
+            x_tolerance: Tolerance for x-distance to insert spaces (default: 1)
         """
         self.companies_config = companies_config
+        self.x_tolerance = x_tolerance
     
     @staticmethod
     def compute_file_hash(file_path: str) -> str:
@@ -142,7 +144,7 @@ class PDFMetadataExtractor:
                 # Page number is 1-indexed in config, convert to 0-indexed for internal use
                 page = coord.get("page", 1) - 1
                 
-                text = self.extract_text_from_region(pdf_path, x1, y1, x2, y2, page_num=page)
+                text = self.extract_text_from_region(pdf_path, x1, y1, x2, y2, page_num=page, x_tolerance=self.x_tolerance)
                 
                 # Skip if page doesn't exist (not this company's format)
                 if text is None:
@@ -183,8 +185,7 @@ class PDFMetadataExtractor:
         insurance_types = company_config.get("insurance_types", {})
         
         # Extract full page text for matching
-        # Use x_tolerance=1 to avoid merging words that are close together
-        full_text = self.extract_full_page_text(pdf_path, x_tolerance=1)
+        full_text = self.extract_full_page_text(pdf_path, x_tolerance=self.x_tolerance)
         print(f"  Full text snippet: {full_text[:100]}...") # Optional: print start of text
         
         # Try to match each insurance type
@@ -475,6 +476,12 @@ def main():
         default='companies.json',
         help='Path to companies.json configuration file (default: companies.json)'
     )
+    parser.add_argument(
+        '--x_tolerance', '-x',
+        type=int,
+        default=1,
+        help='Tolerance for x-distance to insert spaces (default: 1)'
+    )
     
     args = parser.parse_args()
     
@@ -500,7 +507,7 @@ def main():
         sys.exit(1)
     
     # Initialize components
-    extractor = PDFMetadataExtractor(companies_config)
+    extractor = PDFMetadataExtractor(companies_config, x_tolerance=args.x_tolerance)
     meta_manager = MetaFileManager(str(watch_directory))
     event_handler = PDFEventHandler(extractor, meta_manager, str(watch_directory))
     
