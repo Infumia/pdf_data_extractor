@@ -148,7 +148,6 @@ class PDFMetadataExtractor:
                     continue
 
                 print(f"  Extracted text: {text}")
-                print(f"  Company name: {company_name}")
                 
                 # Check if company name appears in the extracted text (exact match)
                 if company_name in text:
@@ -184,13 +183,17 @@ class PDFMetadataExtractor:
         
         # Extract full page text for matching
         full_text = self.extract_full_page_text(pdf_path)
+        # print(f"  Full text snippet: {full_text[:100]}...") # Optional: print start of text
         
         # Try to match each insurance type
         for type_id, text_representations in insurance_types.items():
             for text_repr in text_representations:
+                # print(f"  Checking insurance type '{type_id}': '{text_repr}'")
                 if text_repr in full_text:
+                    # print(f"  ✓ Found insurance type match: {text_repr}")
                     return type_id
         
+        print(f"  ❌ No insurance type matched for company '{company_name}'")
         return None
     
     def extract_metadata(self, pdf_path: str) -> Optional[MetaEntry]:
