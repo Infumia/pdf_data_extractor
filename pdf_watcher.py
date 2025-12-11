@@ -129,19 +129,12 @@ class PDFMetadataExtractor:
             
             for coord in coordinates:
                 # Support both coordinate formats:
-                # Format 1: x1, y1, x2, y2 (from our config)
-                # Format 2: x0, y0, x1, y1 (from pdf_selector)
+                # Format: x0, y0, x1, y1 (from pdf_selector)
                 
-                if 'x0' in coord:
-                    x1 = coord.get("x0", 0)
-                    y1 = coord.get("y0", 0)
-                    x2 = coord.get("x1", 0)
-                    y2 = coord.get("y1", 0)
-                else:
-                    x1 = coord.get("x1", 0)
-                    y1 = coord.get("y1", 0)
-                    x2 = coord.get("x2", 0)
-                    y2 = coord.get("y2", 0)
+                x1 = coord.get("x0", 0)
+                y1 = coord.get("y0", 0)
+                x2 = coord.get("x1", 0)
+                y2 = coord.get("y1", 0)
                 
                 # Page number is 1-indexed in config, convert to 0-indexed for internal use
                 page = coord.get("page", 1) - 1
@@ -186,14 +179,11 @@ class PDFMetadataExtractor:
         
         # Extract full page text for matching
         full_text = self.extract_full_page_text(pdf_path, x_tolerance=self.x_tolerance)
-        print(f"  Full text snippet: {full_text[:100]}...") # Optional: print start of text
         
         # Try to match each insurance type
         for type_id, text_representations in insurance_types.items():
             for text_repr in text_representations:
-                print(f"  Checking insurance type '{type_id}': '{text_repr}'")
                 if text_repr in full_text:
-                    print(f"  ✓ Found insurance type match: {text_repr}")
                     return type_id
         
         print(f"  ❌ No insurance type matched for company '{company_name}'")
