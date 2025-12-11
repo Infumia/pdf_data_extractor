@@ -25,7 +25,7 @@ from watchdog.events import FileSystemEventHandler, FileCreatedEvent, FileModifi
 class MetaEntry:
     """Represents a single entry in the .meta file."""
     name: str
-    hash: str
+    file_hash: str
     company: str
     insurance_type: str
 
@@ -59,6 +59,8 @@ class PDFMetadataExtractor:
         with open(file_path, "rb") as f:
             for byte_block in iter(lambda: f.read(4096), b""):
                 sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
+
     @staticmethod
     def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0, x_tolerance: int = 1) -> Optional[str]:
         """
@@ -149,8 +151,6 @@ class PDFMetadataExtractor:
                 # Skip if page doesn't exist (not this company's format)
                 if text is None:
                     continue
-
-                print(f"  Extracted text: {text}")
                 
                 # Check if company name appears in the extracted text (exact match)
                 if company_name in text:
@@ -211,6 +211,7 @@ class PDFMetadataExtractor:
         """
         name = Path(pdf_path).name
         file_hash = self.compute_file_hash(pdf_path)
+
         company = self.detect_company(pdf_path)
         insurance_type = self.detect_insurance_type(pdf_path, company)
         
@@ -220,7 +221,7 @@ class PDFMetadataExtractor:
         
         return MetaEntry(
             name=name,
-            hash=file_hash,
+            file_hash=file_hash,
             company=company,
             insurance_type=insurance_type
         )
@@ -271,7 +272,7 @@ class MetaFileManager:
                     
                     self.entries[name] = MetaEntry(
                         name=name,
-                        hash=file_hash,
+                        file_hash=file_hash,
                         company=company,
                         insurance_type=insurance_type
                     )
@@ -285,7 +286,7 @@ class MetaFileManager:
                 for entry in self.entries.values():
                     f.write("---\n")
                     f.write(f"{entry.name}\n")
-                    f.write(f"{entry.hash}\n")
+                    f.write(f"{entry.file_hash}\n")
                     f.write(f"{entry.company}\n")
                     f.write(f"{entry.insurance_type}\n")
         except Exception as e:
