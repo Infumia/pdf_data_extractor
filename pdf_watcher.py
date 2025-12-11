@@ -86,13 +86,14 @@ class PDFMetadataExtractor:
             return None
     
     @staticmethod
-    def extract_full_page_text(pdf_path: str, page_num: int = 0) -> str:
+    def extract_full_page_text(pdf_path: str, page_num: int = 0, x_tolerance: int = 1) -> str:
         """
         Extract all text from a PDF page.
         
         Args:
             pdf_path: Path to the PDF file
             page_num: Page number (0-indexed)
+            x_tolerance: Tolerance for x-distance to insert spaces (default: 1)
             
         Returns:
             All text from the page
@@ -102,7 +103,7 @@ class PDFMetadataExtractor:
                 if page_num >= len(pdf.pages):
                     return ""
                 page = pdf.pages[page_num]
-                text = page.extract_text() or ""
+                text = page.extract_text(x_tolerance=x_tolerance) or ""
                 return text
         except Exception as e:
             print(f"Warning: Could not extract page text: {e}")
@@ -182,7 +183,8 @@ class PDFMetadataExtractor:
         insurance_types = company_config.get("insurance_types", {})
         
         # Extract full page text for matching
-        full_text = self.extract_full_page_text(pdf_path)
+        # Use x_tolerance=1 to avoid merging words that are close together
+        full_text = self.extract_full_page_text(pdf_path, x_tolerance=1)
         print(f"  Full text snippet: {full_text[:100]}...") # Optional: print start of text
         
         # Try to match each insurance type
