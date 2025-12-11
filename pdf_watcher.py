@@ -231,6 +231,7 @@ class MetaFileManager:
     def __init__(self, watch_directory: str):
         """
         Initialize the meta file manager.
+        Stats fresh (clears existing config) on startup.
         
         Args:
             watch_directory: Path to the watched directory
@@ -238,10 +239,11 @@ class MetaFileManager:
         self.watch_directory = Path(watch_directory)
         self.meta_file_path = self.watch_directory / f"{self.watch_directory.name}.meta"
         self.entries: dict[str, MetaEntry] = {}
-        self.load()
+        # self.load() # Start fresh/clean on every run as requested
     
     def load(self) -> None:
         """Load existing entries from the .meta file."""
+        # Method kept for reference but not used on startup to ensure clean state
         self.entries = {}
         
         if not self.meta_file_path.exists():
@@ -288,15 +290,17 @@ class MetaFileManager:
         except Exception as e:
             print(f"Error: Could not save .meta file: {e}")
     
-    def add_or_update(self, entry: MetaEntry) -> None:
+    def add_or_update(self, entry: MetaEntry, save_immediately: bool = True) -> None:
         """
         Add or update an entry in the .meta file.
         
         Args:
             entry: MetaEntry to add or update
+            save_immediately: Whether to write to disk immediately
         """
         self.entries[entry.name] = entry
-        self.save()
+        if save_immediately:
+            self.save()
         print(f"  ✓ Updated metadata for: {entry.name}")
     
     def remove(self, name: str) -> None:
@@ -419,6 +423,8 @@ def process_existing_pdfs(watch_directory: str, extractor: PDFMetadataExtractor,
     
     if pdf_files:
         print(f"\n📂 Processing {len(pdf_files)} existing PDF file(s)...")
+        
+        count = 0
         for pdf_file in pdf_files:
             try:
                 print(f"\n📄 Processing: {pdf_file.name}")
@@ -430,9 +436,16 @@ def process_existing_pdfs(watch_directory: str, extractor: PDFMetadataExtractor,
                 
                 print(f"  Company: {entry.company}")
                 print(f"  Insurance Type: {entry.insurance_type}")
-                meta_manager.add_or_update(entry)
+                # Don't save immediately, wait for batch
+                meta_manager.add_or_update(entry, save_immediately=False)
+                count += 1
             except Exception as e:
                 print(f"Error processing {pdf_file}: {e}")
+        
+        # Save all at once after processing existing files
+        if count > 0:
+            meta_manager.save()
+            print(f"\n💾 Saved {count} entries to .meta file")
 
 
 def load_companies_config(config_path: str) -> list:
