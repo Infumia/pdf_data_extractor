@@ -60,7 +60,7 @@ class PDFMetadataExtractor:
         return sha256_hash.hexdigest()
     
     @staticmethod
-    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0) -> Optional[str]:
+    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0, x_tolerance: int = 3) -> Optional[str]:
         """
         Extract text from a specific region of a PDF page.
         
@@ -69,6 +69,7 @@ class PDFMetadataExtractor:
             x1, y1: Top-left corner coordinates
             x2, y2: Bottom-right corner coordinates
             page_num: Page number (0-indexed)
+            x_tolerance: Tolerance for x-distance to insert spaces (default: 3)
             
         Returns:
             Extracted text from the region, or None if page doesn't exist
@@ -80,7 +81,7 @@ class PDFMetadataExtractor:
                 page = pdf.pages[page_num]
                 # Crop coordinates: (x0, top, x1, bottom)
                 cropped = page.crop((x1, y1, x2, y2))
-                text = cropped.extract_text() or ""
+                text = cropped.extract_text(x_tolerance=x_tolerance) or ""
                 return text.strip()
         except Exception as e:
             print(f"Warning: Could not extract text from region: {e}")
@@ -124,10 +125,21 @@ class PDFMetadataExtractor:
             coordinates = company_config.get("coordinates", [])
             
             for coord in coordinates:
-                x1 = coord.get("x1", 0)
-                y1 = coord.get("y1", 0)
-                x2 = coord.get("x2", 0)
-                y2 = coord.get("y2", 0)
+                # Support both coordinate formats:
+                # Format 1: x1, y1, x2, y2 (from our config)
+                # Format 2: x0, y0, x1, y1 (from pdf_selector)
+                
+                if 'x0' in coord:
+                    x1 = coord.get("x0", 0)
+                    y1 = coord.get("y0", 0)
+                    x2 = coord.get("x1", 0)
+                    y2 = coord.get("y1", 0)
+                else:
+                    x1 = coord.get("x1", 0)
+                    y1 = coord.get("y1", 0)
+                    x2 = coord.get("x2", 0)
+                    y2 = coord.get("y2", 0)
+                
                 # Page number is 1-indexed in config, convert to 0-indexed for internal use
                 page = coord.get("page", 1) - 1
                 
