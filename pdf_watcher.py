@@ -208,7 +208,7 @@ class PDFMetadataExtractor:
         Returns:
             MetaEntry with extracted metadata, or None if company/insurance type unknown
         """
-        name = Path(pdf_path).stem
+        name = Path(pdf_path).name
         file_hash = self.compute_file_hash(pdf_path)
         company = self.detect_company(pdf_path)
         insurance_type = self.detect_insurance_type(pdf_path, company)
