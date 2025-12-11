@@ -60,7 +60,7 @@ class PDFMetadataExtractor:
         return sha256_hash.hexdigest()
     
     @staticmethod
-    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0, x_tolerance: int = 3) -> Optional[str]:
+    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0, x_tolerance: int = 1) -> Optional[str]:
         """
         Extract text from a specific region of a PDF page.
         
@@ -69,7 +69,7 @@ class PDFMetadataExtractor:
             x1, y1: Top-left corner coordinates
             x2, y2: Bottom-right corner coordinates
             page_num: Page number (0-indexed)
-            x_tolerance: Tolerance for x-distance to insert spaces (default: 3)
+            x_tolerance: Tolerance for x-distance to insert spaces (default: 1)
             
         Returns:
             Extracted text from the region, or None if page doesn't exist
@@ -148,6 +148,8 @@ class PDFMetadataExtractor:
                 # Skip if page doesn't exist (not this company's format)
                 if text is None:
                     continue
+
+                print(f"  Extracted text: {text}")
                 
                 # Check if company name appears in the extracted text
                 if company_name.lower() in text.lower():
