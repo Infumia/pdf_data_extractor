@@ -57,8 +57,6 @@ class PDFMetadataExtractor:
         with open(file_path, "rb") as f:
             for byte_block in iter(lambda: f.read(4096), b""):
                 sha256_hash.update(byte_block)
-        return sha256_hash.hexdigest()
-    
     @staticmethod
     def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0, x_tolerance: int = 1) -> Optional[str]:
         """
@@ -151,8 +149,8 @@ class PDFMetadataExtractor:
 
                 print(f"  Extracted text: {text}")
                 
-                # Check if company name appears in the extracted text
-                if company_name.lower() in text.lower():
+                # Check if company name appears in the extracted text (exact match)
+                if company_name in text:
                     return company_name
         
         return None
@@ -189,7 +187,7 @@ class PDFMetadataExtractor:
         # Try to match each insurance type
         for type_id, text_representations in insurance_types.items():
             for text_repr in text_representations:
-                if text_repr.lower() in full_text.lower():
+                if text_repr in full_text:
                     return type_id
         
         return None
