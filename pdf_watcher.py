@@ -148,6 +148,7 @@ class PDFMetadataExtractor:
                     continue
 
                 print(f"  Extracted text: {text}")
+                print(f"  Company name: {company_name}")
                 
                 # Check if company name appears in the extracted text (exact match)
                 if company_name in text:
