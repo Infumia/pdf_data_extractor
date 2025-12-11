@@ -60,7 +60,7 @@ class PDFMetadataExtractor:
         return sha256_hash.hexdigest()
     
     @staticmethod
-    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0) -> str:
+    def extract_text_from_region(pdf_path: str, x1: float, y1: float, x2: float, y2: float, page_num: int = 0) -> Optional[str]:
         """
         Extract text from a specific region of a PDF page.
         
@@ -71,12 +71,12 @@ class PDFMetadataExtractor:
             page_num: Page number (0-indexed)
             
         Returns:
-            Extracted text from the region
+            Extracted text from the region, or None if page doesn't exist
         """
         try:
             with pdfplumber.open(pdf_path) as pdf:
-                if page_num >= len(pdf.pages):
-                    return ""
+                if page_num >= len(pdf.pages) or page_num < 0:
+                    return None  # Page doesn't exist
                 page = pdf.pages[page_num]
                 # Crop coordinates: (x0, top, x1, bottom)
                 cropped = page.crop((x1, y1, x2, y2))
@@ -84,7 +84,7 @@ class PDFMetadataExtractor:
                 return text.strip()
         except Exception as e:
             print(f"Warning: Could not extract text from region: {e}")
-            return ""
+            return None
     
     @staticmethod
     def extract_full_page_text(pdf_path: str, page_num: int = 0) -> str:
@@ -132,6 +132,10 @@ class PDFMetadataExtractor:
                 page = coord.get("page", 1) - 1
                 
                 text = self.extract_text_from_region(pdf_path, x1, y1, x2, y2, page_num=page)
+                
+                # Skip if page doesn't exist (not this company's format)
+                if text is None:
+                    continue
                 
                 # Check if company name appears in the extracted text
                 if company_name.lower() in text.lower():
